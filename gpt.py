@@ -70,3 +70,10 @@ completion = client.chat.completions.create(
 )
 
 print(completion.choices[0].message.content)
+
+response = client.completions.create(
+  model="gpt-3.5-turbo-instruct",
+  prompt="Write a tagline for an ice cream shop."
+)
+
+print(response.choices[0].text)

@@ -1,0 +1,74 @@
+#!/bin/sh
+COMMIT_MSG_FILE=$1
+
+# Captura a saída dos comandos git status e git diff
+GIT_DIFF=$(git diff)
+
+INICIO="
+Descreva o ARQUIVO DIFF em uma frase de no máximo 6 palavras, considerando as recomendações e a saída a seguir
+
+ARQUIVO DIFF
+"
+
+FINAL="
+
+RECOMENDAÇÕES (tipo - significado)
+initial commit - commmits para quando o arquivo diff é vazio.
+feat - Commits do tipo feat indicam que seu trecho de código está incluindo um novo recurso (se relaciona com o MINOR do versionamento semântico).
+fix - Commits do tipo fix indicam que seu trecho de código commitado está solucionando um problema (bug fix), (se relaciona com o PATCH do versionamento semântico).
+docs - Commits do tipo docs indicam que houveram mudanças na documentação, como por exemplo no Readme do seu repositório. (Não inclui alterações em código).
+test - Commits do tipo test são utilizados quando são realizadas alterações em testes, seja criando, alterando ou excluindo testes unitários. (Não inclui alterações em código)
+build - Commits do tipo build são utilizados quando são realizadas modificações em arquivos de build e dependências.
+perf - Commits do tipo perf servem para identificar quaisquer alterações de código que estejam relacionadas a performance.
+style - Commits do tipo style indicam que houveram alterações referentes a formatações de código, semicolons, trailing spaces, lint... (Não inclui alterações em código).
+refactor - Commits do tipo refactor referem-se a mudanças devido a refatorações que não alterem sua funcionalidade, como por exemplo, uma alteração no formato como é processada determinada parte da tela, mas que manteve a mesma funcionalidade, ou melhorias de performance devido a um code review.
+chore - Commits do tipo chore indicam atualizações de tarefas de build, configurações de administrador, pacotes... como por exemplo adicionar um pacote no gitignore. (Não inclui alterações em código)
+ci - Commits do tipo ci indicam mudanças relacionadas a integração contínua (continuous integration).
+raw - Commits to tipo raw indicam mudanças relacionadas a arquivos de configurações, dados, features, parametros.
+cleanup - Commits do tipo cleanup são utilizados para remover código comentado, trechos desnecessários ou qualquer outra forma de limpeza do código-fonte, visando aprimorar sua legibilidade e manutenibilidade.
+remove - Commits do tipo remove indicam a exclusão de arquivos, diretórios ou funcionalidades obsoletas ou não utilizadas, reduzindo o tamanho e a complexidade do projeto e mantendo-o mais organizado.
+
+SAÍDA
+tipo - descrição
+"
+
+PROMPT="
+    $INICIO 
+    $GIT_DIFF 
+    $FINAL
+"
+
+PAYLOAD=$(cat <<EOF
+'{
+    "model": "gpt-4o-mini",
+    "messages": [
+        {
+            "role": "system",
+            "content": "Você é uma analista de qualidade de commits para um repositório git."
+        },
+        {
+            "role": "user",
+            "content": "$PROMPT"
+        }
+    ]
+}'
+EOF
+)
+
+
+# Envia a requisição POST para a API e captura a resposta
+API_RESPONSE=$(
+    curl -X POST "https://api.openai.com/v1/chat/completions" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer $OPENAI_API_KEY" \
+    -d "$PAYLOAD"
+)
+
+# Extrai o campo 'mensagem' da resposta JSON
+MENSAGEM=$(echo $API_RESPONSE | grep -o '"message": *"[^"]*"' | awk -F'"' '{print $4}')
+
+# Adiciona a mensagem extraída no início do arquivo de mensagem de commit
+echo "$MENSAGEM"
+# echo "$MENSAGEM" > temp_msg
+# cat "$COMMIT_MSG_FILE" >> temp_msg
+# mv temp_msg "$COMMIT_MSG_FILE"

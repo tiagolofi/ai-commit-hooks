@@ -68,3 +68,7 @@ fi
 1. Retirar acoplamento ao Python
 
 Trabalhar com contratos da API no bash, de forma que funcione em qualquer SO, sem utilizar utilitários como o `jq`.
+
+### Teste 
+
+Vamos testar essa funcionalidade 

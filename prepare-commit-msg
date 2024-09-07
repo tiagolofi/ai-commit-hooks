@@ -1,7 +1,0 @@
-#!/bin/sh
-COMMIT_MSG_FILE=$1
-
-env/Scripts/python.exe gpt.py
-
-cat "$COMMIT_MSG_FILE" >> temp_msg
-mv temp_msg "$COMMIT_MSG_FILE"

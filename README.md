@@ -71,4 +71,4 @@ Trabalhar com contratos da API no bash, de forma que funcione em qualquer SO, se
 
 ### Teste 
 
-Vamos testar essa funcionalidade 
+Vamos testar uma funcionalidade nova 

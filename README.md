@@ -63,7 +63,7 @@ fi
 
 **OBS**: no vscode é possível stagear as alterações sem utilizar diretamente `git add`. Este por sua vez, é acionado por trás dos panos.
 
-### Features
+### Features (em breve)
 
 **Retirar acoplamento ao Python**
 

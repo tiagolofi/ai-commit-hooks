@@ -51,3 +51,7 @@ mv temp_msg "$COMMIT_MSG_FILE"
 ![](ai-commit-dark.png)
 
 **OBS**: no vscode é possível stagear as alterações sem utilizar diretamente `git add`. Este por sua vez, é acionado por trás dos panos.
+
+### Melhorias
+
+1. Retirar acomplamento ao python

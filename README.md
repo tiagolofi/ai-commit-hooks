@@ -63,12 +63,9 @@ fi
 
 **OBS**: no vscode é possível stagear as alterações sem utilizar diretamente `git add`. Este por sua vez, é acionado por trás dos panos.
 
-### Melhorias
+### Features
 
-1. Retirar acoplamento ao Python
+**Retirar acoplamento ao Python**
 
-Trabalhar com contratos da API no bash, de forma que funcione em qualquer SO, sem utilizar utilitários como o `jq`.
-
-### Teste 
-
-Vamos testar uma funcionalidade nova 
+1. Trabalhar com outros tipos de contrato que podem passados para a chamada via curl;
+2. Construir um tratamento de texto do `git diff` (pode se mostrar bastante complexo), sem utilizar utilitários como o `jq`;

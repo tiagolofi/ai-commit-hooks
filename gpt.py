@@ -29,6 +29,10 @@ type - description of changes in up to 6 words in portuguese
 
 content_user = sp.run(['git', 'diff'], capture_output=True, text=True).stdout
 
+# file = open('content_', 'w')
+# file.write(content_user)
+# file.close()
+
 completion = client.chat.completions.create(
     model="gpt-4o-mini",
     messages=[
@@ -42,5 +46,5 @@ completion = client.chat.completions.create(
 
 resposta = completion.choices[0].message.content
 file = open('temp_msg', 'w') # adicionando arquivo X
-file.write(resposta)
+file.write(content_user, resposta)
 file.close()

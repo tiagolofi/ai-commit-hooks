@@ -1,0 +1,13 @@
+#!/bin/sh
+COMMIT_MSG_FILE=$1
+
+OS=$(uname -o)
+
+if ["$OS" = "Msys"]; then
+    env/scripts/python prepare_commit_msg_ai.py
+else
+    env/bin/python prepare_commit_msg_ai.py
+fi
+
+cat "$COMMIT_MSG_FILE" >> temp_msg
+mv temp_msg "$COMMIT_MSG_FILE"

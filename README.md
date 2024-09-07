@@ -34,7 +34,7 @@ pip install openai
 
 2. Adicione sua chave da OpenAI como variável de ambiente `OPENAI_API_KEY` e;
 
-3. Adicione o arquivo `prepare-commit-msg` no diretório oculto `.git/hooks/`.
+3. Adicione o arquivo `prepare-commit-msg` no diretório `.git/hooks/`.
 
 ```bash
 #!/bin/sh

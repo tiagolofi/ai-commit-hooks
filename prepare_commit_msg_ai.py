@@ -27,7 +27,7 @@ OUTPUT:
 type - description of changes in up to 6 words in portuguese
 """
 
-content_user = sp.run(['git', 'diff'], capture_output=True, text=True).stdout
+content_user = sp.run(['git', 'diff', '--staged'], capture_output=True, text=True).stdout
 
 completion = client.chat.completions.create(
     model="gpt-4o-mini",

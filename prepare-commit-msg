@@ -11,8 +11,8 @@ else
 fi
 
 cat "$COMMIT_MSG_FILE" >> temp_msg
+mv temp_msg "$COMMIT_MSG_FILE"
 COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
 if [[ -z "$COMMIT_MSG" || "$COMMIT_MSG" =~ ^[[:space:]]*$ ]]; then
     exit 1 # erro: mensagem vazia
 fi
-mv temp_msg "$COMMIT_MSG_FILE"

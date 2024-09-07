@@ -41,6 +41,6 @@ completion = client.chat.completions.create(
 )
 
 resposta = completion.choices[0].message.content
-file = open('temp_msg', 'w')
+file = open('temp_msg', 'w') # adicionando arquivo
 file.write(resposta)
 file.close()

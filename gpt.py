@@ -1,79 +1,46 @@
 
 from openai import OpenAI
+import subprocess as sp
 client = OpenAI()
 
-prompt = """
-Descreva o arquivo diff.txt em uma frase de no máximo 6 palavras, considerando as recomendações e a saída a seguir:
+content_system = """
+You are an assistant specialized in analyzing the quality of commits for GitHub, 
+using the output of the git diff command and classifying them according to the following recommendations:
 
-arquivo diff.txt:
-```
-diff --git a/worker.py b/worker.py
-index f144cea..92e5920 100644
---- a/worker.py
-+++ b/worker.py
-@@ -5,7 +5,7 @@ from limpeza import Limpeza
- from transformacao import PowerBI
- 
- e = ExtracaoDados()
--e.pool_async_inserir_dados()
-+# e.pool_async_inserir_dados()
- 
- g = Grupos()
- g.increment_groups()
-```
+RECOMMENDATIONS (type - meaning):
+initial commit - commits for when the diff file is empty. 
+feat - Commits of type feat indicate that your code snippet is adding a new feature (related to MINOR in semantic versioning). 
+fix - Commits of type fix indicate that your committed code snippet is solving a problem (bug fix), (related to PATCH in semantic versioning). 
+docs - Commits of type docs indicate that there have been changes in the documentation, such as in your repository’s Readme. (Does not include code changes). 
+test - Commits of type test are used when changes are made to tests, whether creating, altering, or deleting unit tests. (Does not include code changes). 
+build - Commits of type build are used when modifications are made to build files and dependencies. 
+perf - Commits of type perf are used to identify any code changes related to performance. 
+style - Commits of type style indicate that there have been changes related to code formatting, semicolons, trailing spaces, lint… (Does not include code changes). 
+refactor - Commits of type refactor refer to changes due to refactoring that do not alter functionality, such as a change in the way a part of the screen is processed but maintaining the same functionality, or performance improvements due to a code review. 
+chore - Commits of type chore indicate updates to build tasks, admin configurations, packages… such as adding a package to gitignore. (Does not include code changes). 
+ci - Commits of type ci indicate changes related to continuous integration. 
+raw - Commits of type raw indicate changes related to configuration files, data, features, parameters. 
+cleanup - Commits of type cleanup are used to remove commented code, unnecessary snippets, or any other form of source code cleanup, aiming to improve its readability and maintainability. 
+remove - Commits of type remove indicate the deletion of obsolete or unused files, directories, or functionalities, reducing the project’s size and complexity and keeping it more organized.
 
-recomendações (tipo - significado):
-```
-initial commit - commmits para quando o arquivo diff.txt é vazio.
-
-feat- Commits do tipo feat indicam que seu trecho de código está incluindo um novo recurso (se relaciona com o MINOR do versionamento semântico).
-
-fix - Commits do tipo fix indicam que seu trecho de código commitado está solucionando um problema (bug fix), (se relaciona com o PATCH do versionamento semântico).
-
-docs - Commits do tipo docs indicam que houveram mudanças na documentação, como por exemplo no Readme do seu repositório. (Não inclui alterações em código).
-
-test - Commits do tipo test são utilizados quando são realizadas alterações em testes, seja criando, alterando ou excluindo testes unitários. (Não inclui alterações em código)
-
-build - Commits do tipo build são utilizados quando são realizadas modificações em arquivos de build e dependências.
-
-perf - Commits do tipo perf servem para identificar quaisquer alterações de código que estejam relacionadas a performance.
-
-style - Commits do tipo style indicam que houveram alterações referentes a formatações de código, semicolons, trailing spaces, lint... (Não inclui alterações em código).
-
-refactor - Commits do tipo refactor referem-se a mudanças devido a refatorações que não alterem sua funcionalidade, como por exemplo, uma alteração no formato como é processada determinada parte da tela, mas que manteve a mesma funcionalidade, ou melhorias de performance devido a um code review.
-
-chore - Commits do tipo chore indicam atualizações de tarefas de build, configurações de administrador, pacotes... como por exemplo adicionar um pacote no gitignore. (Não inclui alterações em código)
-
-ci - Commits do tipo ci indicam mudanças relacionadas a integração contínua (continuous integration).
-
-raw - Commits to tipo raw indicam mudanças relacionadas a arquivos de configurações, dados, features, parametros.
-
-cleanup - Commits do tipo cleanup são utilizados para remover código comentado, trechos desnecessários ou qualquer outra forma de limpeza do código-fonte, visando aprimorar sua legibilidade e manutenibilidade.
-
-remove - Commits do tipo remove indicam a exclusão de arquivos, diretórios ou funcionalidades obsoletas ou não utilizadas, reduzindo o tamanho e a complexidade do projeto e mantendo-o mais organizado.
-```
-
-saída: 
-tipo: descrição
-
+OUTPUT:
+type - description of changes in up to 6 words in portuguese
 """
+
+content_user = sp.run(['git', 'diff'], capture_output=True, text=True).stdout
 
 completion = client.chat.completions.create(
     model="gpt-4o-mini",
     messages=[
-        {"role": "system", "content": "Você é um analista de commits"},
+        {"role": "system", "content": content_system},
         {
             "role": "user",
-            "content": prompt
+            "content": content_user
         }
     ]
 )
 
-print(completion.choices[0].message.content)
-
-response = client.completions.create(
-  model="gpt-3.5-turbo-instruct",
-  prompt="Write a tagline for an ice cream shop."
-)
-
-print(response.choices[0].text)
+resposta = completion.choices[0].message.content
+file = open('temp_msg', 'w')
+file.write(resposta)
+file.close()

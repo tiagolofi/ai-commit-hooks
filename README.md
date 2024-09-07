@@ -41,8 +41,9 @@ pip install openai
 COMMIT_MSG_FILE=$1
 
 OS=$(uname -o)
+WINDOWS="Msys"
 
-if ["$OS" = "Msys"]; then
+if [ "$OS" = "$WINDOWS" ]; then
     env/scripts/python prepare_commit_msg_ai.py
 else
     env/bin/python prepare_commit_msg_ai.py
@@ -50,6 +51,10 @@ fi
 
 cat "$COMMIT_MSG_FILE" >> temp_msg
 mv temp_msg "$COMMIT_MSG_FILE"
+COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
+if [[ -z "$COMMIT_MSG" || "$COMMIT_MSG" =~ ^[[:space:]]*$ ]]; then
+    exit 1 # erro: mensagem vazia
+fi
 ```
 
 ### Como isso funciona

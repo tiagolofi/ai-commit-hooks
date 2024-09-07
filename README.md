@@ -65,7 +65,14 @@ fi
 
 ### Features (em breve)
 
+**Acompanhar a evolução dos modelos**
+
+Trabalhar com outros tipos de contrato disponibilizados pela OpenAI
+
 **Retirar acoplamento ao Python**
 
-1. Trabalhar com outros tipos de contrato que podem passados para a chamada via curl;
-2. Construir um tratamento de texto do `git diff` (pode se mostrar bastante complexo), sem utilizar utilitários como o `jq`;
+Construir um tratamento de texto do `git diff` (pode se mostrar bastante complexo), sem utilizar utilitários como o `jq`.
+
+**Serviço que gera os commits**
+
+Executa uma chamada via curl com um contrato muito simples (não será application/json).

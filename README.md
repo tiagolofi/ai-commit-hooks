@@ -18,11 +18,17 @@ A base do prompt usada é explorada aqui em [iuricode/padroes-de-commit](https:/
 1. Crie um ambiente vitual e instale a dependência da OpenAI;
 ```shell
 python -m venv env
+```
 
+```shell
 .\env\Scripts\Activate # windows
+```
 
+```bash
 env/bin/activate # linux
+```
 
+```shell
 pip install openai
 ```
 
@@ -54,4 +60,6 @@ mv temp_msg "$COMMIT_MSG_FILE"
 
 ### Melhorias
 
-1. Retirar acomplamento ao python
+1. Retirar acoplamento ao Python
+
+Trabalhar com contratos da API no bash, de forma que funcione em qualquer SO, sem utilizar utilitários como o `jq`.

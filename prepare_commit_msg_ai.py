@@ -24,7 +24,7 @@ cleanup - Commits of type cleanup are used to remove commented code, unnecessary
 remove - Commits of type remove indicate the deletion of obsolete or unused files, directories, or functionalities, reducing the project’s size and complexity and keeping it more organized.
 
 OUTPUT:
-type - description of changes in up to 6 words in portuguese
+type recommendation - description of changes in up to 6 words in portuguese
 """
 
 content_user = sp.run(['git', 'diff', '--staged'], capture_output=True, text=True).stdout

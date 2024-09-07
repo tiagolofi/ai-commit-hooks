@@ -10,4 +10,5 @@ else
 fi
 
 cat "$COMMIT_MSG_FILE" >> temp_msg
+/usr/bin/perl -i.bak -ne 'print unless(m/^. Please enter the commit message/..m/^#$/)' "$COMMIT_MSG_FILE"
 mv temp_msg "$COMMIT_MSG_FILE"

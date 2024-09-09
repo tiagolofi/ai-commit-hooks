@@ -1,15 +1,19 @@
 #!/bin/sh
 COMMIT_MSG_FILE=$1
 
-OS=$(uname -o)
-WINDOWS="Msys"
+GIT_DIFF=$(git diff --staged)
 
-if [ "$OS" = "$WINDOWS" ]; then
-    env/scripts/python prepare_commit_msg_ai.py
-else
-    env/bin/python prepare_commit_msg_ai.py
-fi
+API_RESPONSE=$(
+    curl -X 'POST' \
+    'http://localhost:8080/commit/gpt-4o-mini' \
+    -H 'Token-Consumo: SEU_TOKEN_GERADO_NA_APLICACAO' \
+    -H 'Content-Type: text/plain' \
+    -d "$GIT_DIFF"
+)
 
+COMMIT=$(echo $API_RESPONSE | grep -o '"respostaGPT4oMini": *"[^"]*"' | awk -F'"' '{print $4}')
+
+echo "$COMMIT" > temp_msg
 cat "$COMMIT_MSG_FILE" >> temp_msg
 mv temp_msg "$COMMIT_MSG_FILE"
 COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")

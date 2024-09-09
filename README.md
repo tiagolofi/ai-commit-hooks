@@ -9,46 +9,34 @@ A base do prompt usada é explorada aqui em [iuricode/padroes-de-commit](https:/
 
 ### Pré-requisitos
 
-- Python 3
 - Git/Git Bash
 - Chave de API da Open AI
 
-### Como configurar
+### Configurando
 
-1. Crie um ambiente vitual e instale a dependência da OpenAI;
-```shell
-python -m venv env
-```
+1. Rode o projeto [AI Commits Hooks API](https://github.com/tiagolofi/ai-commit-hooks-api);
 
-```shell
-.\env\Scripts\Activate # windows
-```
+2. Gere e aprove seus tokens de consumo em `/q/api-docs`;
 
-```bash
-env/bin/activate # linux
-```
-
-```shell
-pip install openai
-```
-
-2. Adicione sua chave da OpenAI como variável de ambiente `OPENAI_API_KEY` e;
-
-3. Adicione o arquivo `prepare-commit-msg` no diretório `.git/hooks/`.
+2. Adicione o arquivo `prepare-commit-msg` no diretório `.git/hooks/`.
 
 ```bash
 #!/bin/sh
 COMMIT_MSG_FILE=$1
 
-OS=$(uname -o)
-WINDOWS="Msys"
+GIT_DIFF=$(git diff --staged)
 
-if [ "$OS" = "$WINDOWS" ]; then
-    env/scripts/python prepare_commit_msg_ai.py
-else
-    env/bin/python prepare_commit_msg_ai.py
-fi
+API_RESPONSE=$(
+    curl -X 'POST' \
+    'http://localhost:8080/commit/gpt-4o-mini' \
+    -H 'Token-Consumo: SEU_TOKEN_GERADO_NA_APLICACAO' \
+    -H 'Content-Type: text/plain' \
+    -d "$GIT_DIFF"
+)
 
+COMMIT=$(echo $API_RESPONSE | grep -o '"respostaGPT4oMini": *"[^"]*"' | awk -F'"' '{print $4}')
+
+echo "$COMMIT" > temp_msg
 cat "$COMMIT_MSG_FILE" >> temp_msg
 mv temp_msg "$COMMIT_MSG_FILE"
 COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
@@ -65,14 +53,9 @@ fi
 
 ### Features (em breve)
 
-**Acompanhar a evolução dos modelos**
+| Feature | O que é | Feito |
+|:--------|:--------|:-----:|
+| **Acompanhar a evolução dos modelos** | Trabalhar com outros tipos de contrato disponibilizados pela OpenAI | [ ] |
+| **Retirar acoplamento ao Python** | Construir um tratamento de texto do `git diff` (pode se mostrar bastante complexo), sem utilizar utilitários como o `jq`. | [x] |
+| **Serviço que gera os commits** | Executa uma chamada via curl com um contrato muito simples (não será application/json). | [x] | 
 
-Trabalhar com outros tipos de contrato disponibilizados pela OpenAI
-
-**Retirar acoplamento ao Python**
-
-Construir um tratamento de texto do `git diff` (pode se mostrar bastante complexo), sem utilizar utilitários como o `jq`.
-
-**Serviço que gera os commits**
-
-Executa uma chamada via curl com um contrato muito simples (não será application/json).

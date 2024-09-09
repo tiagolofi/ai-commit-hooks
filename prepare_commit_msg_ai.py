@@ -40,7 +40,9 @@ completion = client.chat.completions.create(
     ]
 )
 
+print(completion)
+
 resposta = completion.choices[0].message.content
-file = open('temp_msg', 'w') # testando conteúdo novamente
+file = open('temp_msg', 'w')
 file.write(resposta)
 file.close()

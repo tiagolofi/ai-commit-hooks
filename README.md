@@ -10,15 +10,30 @@ A base do prompt usada é explorada aqui em [iuricode/padroes-de-commit](https:/
 ### Pré-requisitos
 
 - Git/Git Bash
+- MongoDB Atlas
 - Chave de API da Open AI
 
 ### Configurando
 
 1. Rode o projeto [AI Commits Hooks API](https://github.com/tiagolofi/ai-commit-hooks-api);
 
-2. Gere e aprove seus tokens de consumo em `/q/api-docs`;
+3. Configure um token autorizativo nas variáveis de ambiente e a string de conexão do MongoDB Atlas. Dessa forma, você pode gerar e aprovar seus tokens de consumo em `/q/api-docs`;
 
-2. Adicione o arquivo `prepare-commit-msg` no diretório `.git/hooks/`.
+**Criação do token de consumo**
+```bash
+curl -X 'POST' \
+    'http://localhost:8080/token/novo' \
+    -H 'Token-Consumo: SEU_TOKEN_GERADO_NA_APLICACAO' \
+    -H 'Content-Type: application/json' \
+    -d '{"email": "teste@gmail.com", "duration_days": 1, "limit_request": 1}'
+```
+
+**Aprovação do token**
+```bash
+curl -X 'PUT' http://localhost:8080/token/aprovar?tokenPending=XXXX
+```
+
+4. Adicione o arquivo `prepare-commit-msg` no diretório `.git/hooks/`.
 
 ```bash
 #!/bin/sh

@@ -37,6 +37,10 @@ curl -X 'PUT' http://localhost:8080/token/aprovar?tokenPending=XXXX
 
 ```bash
 #!/bin/sh
+
+# Implemente o serviço em https://github.com/tiagolofi/ai-commit-hooks-api
+# Mais detalhes em: https://github.com/tiagolofi/ai-commit-hooks
+
 COMMIT_MSG_FILE=$1
 
 GIT_DIFF=$(git diff --staged)
@@ -52,7 +56,7 @@ API_RESPONSE=$(
 COMMIT=$(echo $API_RESPONSE | grep -o '"respostaGPT4oMini": *"[^"]*"' | awk -F'"' '{print $4}')
 
 echo "$COMMIT" > temp_msg
-cat "$COMMIT_MSG_FILE" >> temp_msg
+cat "$COMMIT_MSG_FILE" >> temp_msg # dê um " " na mensagem de commit
 mv temp_msg "$COMMIT_MSG_FILE"
 COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
 if [[ -z "$COMMIT_MSG" || "$COMMIT_MSG" =~ ^[[:space:]]*$ ]]; then

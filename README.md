@@ -70,11 +70,18 @@ fi
 
 **OBS**: no vscode é possível stagear as alterações sem utilizar diretamente `git add`. Este por sua vez, é acionado por trás dos panos.
 
+### Troubleshooting (Erros Observados)
+
+**Mensagem de erro 'arguments too large'**: commit normalmente, a chamada não será feita devido uma limitação do número de linhas que o curl pode receber
+
+**Duplo commit, ex: feat + fix**: evite commitar muitos arquivos de uma vez só. Pode vir acontecer de dois commits nascerem ao mesmo tempo e API está configurada para devolver apenas 20 tokens; 
+
 ### Features (em breve)
 
-| Feature | O que é | Feito |
+| Feature | O que é | Implementado |
 |:--------|:--------|:-----:|
 | **Acompanhar a evolução dos modelos** | Trabalhar com outros tipos de contrato disponibilizados pela OpenAI | [ ] |
+| **Quantidade de commits e palavras** | Tornar mais personalizável essa parte do projeto | [ ] |
 | **Retirar acoplamento ao Python** | Construir um tratamento de texto do `git diff` (pode se mostrar bastante complexo), sem utilizar utilitários como o `jq`. | [x] |
 | **Serviço que gera os commits** | Executa uma chamada via curl com um contrato muito simples (não será application/json). | [x] | 
 
